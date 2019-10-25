@@ -1,6 +1,6 @@
 # Thinking In SQL
 
-GitChat 专栏《SQL 编程思想》示例数据库，提供 Oracle、MySQL、SQL Server 以及 PostgreSQL 初始化脚本。
+GitChat 专栏《SQL 从入门到精通》的示例数据库，提供 Oracle、MySQL、SQL Server 以及 PostgreSQL 初始化脚本。
 
 执行步骤如下：
 
