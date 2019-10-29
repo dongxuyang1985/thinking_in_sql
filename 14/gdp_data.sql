@@ -1,12 +1,12 @@
--- create table
+-- 创建 GDP 和人口数据表
 CREATE TABLE gdp_data(
-  country_name VARCHAR(60),
-  year INT,
-  population NUMERIC,
-  gdp NUMERIC(20,2),
+  country_name VARCHAR(60), -- 国家/地区
+  year INT, -- 年度
+  population NUMERIC, -- 人口
+  gdp NUMERIC(20,2), -- GDP
   CONSTRAINT gdp_data_pk PRIMARY KEY (country_name, year));
 
--- insert data
+-- 插入数据
 INSERT INTO gdp_data VALUES ('阿鲁巴',2010,101669,2390502793);
 INSERT INTO gdp_data VALUES ('阿富汗',2010,29185507,15856574731);
 INSERT INTO gdp_data VALUES ('安哥拉',2010,23356246,83799496611);
