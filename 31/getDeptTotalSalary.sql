@@ -64,3 +64,11 @@ $$
 -- 5. 调用函数
 SELECT dept_name, getDeptTotalSalary(dept_id)
   FROM department;
+dept_name|getDeptTotalSalary(dept_id)|
+---------|---------------------------|
+行政管理部  |                      80000|
+人力资源部  |                      39500|
+财务部      |                      18000|
+研发部      |                      68200|
+销售部      |                      40100|
+保卫部      |                           |
