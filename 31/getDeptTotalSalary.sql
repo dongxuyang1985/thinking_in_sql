@@ -18,7 +18,7 @@ END;
 DELIMITER $$
 CREATE FUNCTION getDeptTotalSalary (pn_dept_id INTEGER)
     RETURNS NUMERIC
-    READS SQL DATA
+    READS SQL DATA -- 表示只读取数据，不修改数据
 BEGIN
 	DECLARE ln_total_salary NUMERIC;
 
@@ -36,7 +36,7 @@ CREATE OR ALTER  FUNCTION getDeptTotalSalary (@pn_dept_id INTEGER)
     RETURNS NUMERIC
 AS
 BEGIN
-	DECLARE @ln_total_salary NUMERIC
+    DECLARE @ln_total_salary NUMERIC
 	
     SELECT @ln_total_salary = SUM(salary)
       FROM employee
@@ -48,6 +48,7 @@ END
 -- 4. PostgreSQL 实现
 CREATE OR REPLACE FUNCTION getDeptTotalSalary (pn_dept_id INTEGER)
     RETURNS NUMERIC
+    LANGUAGE PLPGSQL
 AS $$
     DECLARE ln_total_salary NUMERIC;
 BEGIN
@@ -57,8 +58,8 @@ BEGIN
      WHERE dept_id = pn_dept_id;
     
     RETURN ln_total_salary;
-END; $$
-LANGUAGE PLPGSQL;
+END;
+$$
 
 -- 5. 调用函数
 SELECT dept_name, getDeptTotalSalary(dept_id)
