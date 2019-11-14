@@ -1,4 +1,4 @@
--- 第 29 篇练习题参考答案
+-- 第 30 篇练习题参考答案
 -- 练习题 1：创建一个关于员工信息的视图 emp_detail：
 
 CREATE VIEW emp_detail(id, manager, dept_name, job_title, name, sex, email)
