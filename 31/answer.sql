@@ -128,7 +128,7 @@ BEGIN
   -- 员工不存在，返回异常错误
   IF (@ln_cnt = 0)
   BEGIN
-    RAISERROR(@msg, 17, 1)
+    RAISERROR(@msg, 11, 1)
   END
    
   -- 更新员工信息
@@ -153,6 +153,53 @@ EXEC update_employee_byid 26, '李四', '男', 5, 18, '2019-12-31', 10, 7000, NU
 SELECT * FROM employee WHERE emp_id = 26;
 
 -- PostgreSQL
+CREATE OR REPLACE PROCEDURE update_employee_byid
+( p_emp_id    IN INTEGER,
+  p_emp_name  IN VARCHAR,
+  p_sex       IN VARCHAR,
+  p_dept_id   IN INTEGER,
+  p_manager   IN INTEGER,
+  p_hire_date IN DATE,
+  p_job_id    IN INTEGER,
+  p_salary    IN NUMERIC,
+  p_bonus     IN NUMERIC,
+  p_email     IN VARCHAR)
+LANGUAGE plpgsql
+AS $$
+  DECLARE ln_cnt INTEGER;
+BEGIN
+  -- 判断该员工是否存在
+  SELECT COUNT(1)
+    INTO ln_cnt
+    FROM employee
+   WHERE emp_id = p_emp_id;
+  
+  IF (ln_cnt = 0) THEN
+    RAISE EXCEPTION '员工不存在：%', p_emp_id;    
+  END IF;
+   
+  -- 获取下一个员工编号
+  UPDATE employee
+     SET emp_name = p_emp_name,
+         sex = p_sex,
+         dept_id = p_dept_id,
+         manager = p_manager,
+         hire_date = p_hire_date,
+         job_id = p_job_id,
+         salary = p_salary,
+         bonus = p_bonus,
+         email = p_email
+  WHERE emp_id = p_emp_id;
+END;
+$$
+
+-- 测试
+CALL update_employee_byid(0, '李四', '男', 5, 18, '2019-12-31', 10, 7000, NULL, 'lisi@shuguo.com');
+SQL Error [P0001]: ERROR: 员工不存在：0
+  Where: PL/pgSQL function update_employee_byid(integer,character varying,character varying,integer,integer,date,integer,numeric,numeric,character varying) line 11 at RAISE
+
+CALL update_employee_byid(26, '李四', '男', 5, 18, '2019-12-31', 10, 7000, NULL, 'lisi@shuguo.com');
+SELECT * FROM employee WHERE emp_id = 26;
 
 -- 2. 创建存储过程 delete_employee_byid
 -- Oracle
