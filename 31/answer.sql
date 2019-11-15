@@ -203,6 +203,118 @@ SELECT * FROM employee WHERE emp_id = 26;
 
 -- 2. 创建存储过程 delete_employee_byid
 -- Oracle
+CREATE OR REPLACE PROCEDURE delete_employee_byid
+( p_emp_id    IN INTEGER)
+AS
+  ln_cnt INTEGER;
+BEGIN
+  -- 判断该员工是否存在
+  SELECT COUNT(1)
+    INTO ln_cnt
+    FROM employee
+   WHERE emp_id = p_emp_id;
+  
+  IF (ln_cnt = 0) THEN
+    raise_application_error(-20001, '员工不存在：  ' || p_emp_id);
+  END IF;
+  
+  -- 删除员工
+  DELETE
+    FROM employee
+   WHERE emp_id = p_emp_id;
+END;
+
+-- 测试
+CALL delete_employee_byid(26);
+SELECT * FROM employee WHERE emp_id = 26;
+
 -- MySQL
+DELIMITER $$
+
+CREATE PROCEDURE delete_employee_byid
+( IN p_emp_id    INTEGER)
+BEGIN
+  DECLARE ln_cnt INT;
+  DECLARE msg VARCHAR(100);
+
+  -- 判断该员工是否存在
+  SELECT COUNT(1),CONCAT('员工不存在：', p_emp_id)
+    INTO ln_cnt,msg
+    FROM employee
+   WHERE emp_id = p_emp_id;
+  
+  -- 员工不存在，返回异常错误
+  IF (ln_cnt = 0) THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = msg;
+  END IF;
+   
+  -- 删除员工
+  DELETE
+    FROM employee
+   WHERE emp_id = p_emp_id;
+END$$
+
+DELIMITER ;
+
+-- 测试
+CALL delete_employee_byid(26);
+SELECT * FROM employee WHERE emp_id = 26;
+
 -- SQL Server
+CREATE OR ALTER PROCEDURE delete_employee_byid
+( @p_emp_id    INTEGER)
+AS
+BEGIN
+  DECLARE @ln_cnt INT
+  DECLARE @msg VARCHAR(100)
+
+  -- 判断该员工是否存在
+  SELECT @ln_cnt = COUNT(1), @msg = '员工不存在： ' + CAST(@p_emp_id AS VARCHAR)
+    FROM employee
+   WHERE emp_id = @p_emp_id
+  
+  -- 员工不存在，返回异常错误
+  IF (@ln_cnt = 0)
+  BEGIN
+    RAISERROR(@msg, 17, 1)
+  END
+   
+  -- 删除员工
+  DELETE
+    FROM employee
+   WHERE emp_id = @p_emp_id
+END
+
+-- 测试
+EXEC delete_employee_byid 26 ;
+SELECT * FROM employee WHERE emp_id = 26;
+
 -- PostgreSQL
+CREATE OR REPLACE PROCEDURE delete_employee_byid
+( p_emp_id    IN INTEGER)
+LANGUAGE plpgsql
+AS $$
+  DECLARE ln_cnt INTEGER;
+BEGIN
+  -- 判断该员工是否存在
+  SELECT COUNT(1)
+    INTO ln_cnt
+    FROM employee
+   WHERE emp_id = p_emp_id;
+  
+  IF (ln_cnt = 0) THEN
+    RAISE EXCEPTION '员工不存在：%', p_emp_id;    
+  END IF;
+   
+  -- 删除员工
+  DELETE
+    FROM employee
+   WHERE emp_id = p_emp_id;
+END;
+$$
+
+-- 测试
+CALL delete_employee_byid(26);
+SELECT * FROM employee WHERE emp_id = 26;
+
