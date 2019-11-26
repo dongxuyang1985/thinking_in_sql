@@ -34,7 +34,7 @@ try:
                         email = %s
                   WHERE emp_name = %s"""
     emp_info = (6500, 500, 'lisi@shuguo.net', '李四')
-    cursor = connection.cursor()
+    cursor = connection.cursor(prepared=True)
     cursor.execute(sql_str, emp_info)
     connection.commit()
 
