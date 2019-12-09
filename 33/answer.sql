@@ -91,21 +91,29 @@ Rows|Executes|StmtText                                                          
  -- 解读：
  -- 1. SQL Server 和 MySQL 类似，采用了嵌套循环连接（Nested Loops Join），同时输出了更加详细的信息。
  -- 2. 首先，通过聚集索引扫描（Clustered Index Scan）获取 department 表中的 dept_id 和 dept_name，执行一次扫描返回 6 条记录；
- --    然后，通过聚集索引扫描（Clustered Index Scan）获取 employee 表中的 dept_id，同时进行聚合操作计算平均月薪，执行 6 次扫描返回 5 个聚合结果；
+ --    然后，通过聚集索引扫描（Clustered Index Scan）获取 employee 表中的 dept_id，同时进行聚合操作计算平均月薪，执行 6 次扫描返回 5 个聚合结果。
  
  -- PostgreSQL 查看执行计划
- EXPLAIN SELECT d.dept_name AS "部门名称",
+EXPLAIN ANALYZE SELECT d.dept_name AS "部门名称",
        (SELECT AVG(salary) AS avg_salary
           FROM employee
          WHERE dept_id = d.dept_id) AS "平均月薪"
   FROM department d
  ORDER BY d.dept_id;
-QUERY PLAN                                                                                |
-------------------------------------------------------------------------------------------|
-Index Scan using department_pkey on department d  (cost=0.15..4472.10 rows=540 width=154) |
-  SubPlan 1                                                                               |
-    ->  Aggregate  (cost=8.17..8.18 rows=1 width=32)                                      |
-          ->  Index Scan using idx_emp_dept on employee  (cost=0.14..8.16 rows=1 width=14)|
-                Index Cond: (dept_id = d.dept_id)                                         |
-
---解读：
+QUERY PLAN                                                                                                                                |
+------------------------------------------------------------------------------------------------------------------------------------------|
+Sort  (cost=50.20..50.22 rows=6 width=48) (actual time=0.186..0.187 rows=6 loops=1)                                                       |
+  Sort Key: d.dept_id                                                                                                                     |
+  Sort Method: quicksort  Memory: 25kB                                                                                                    |
+  ->  Seq Scan on department d  (cost=0.00..50.12 rows=6 width=48) (actual time=0.047..0.152 rows=6 loops=1)                              |
+        SubPlan 1                                                                                                                         |
+          ->  Aggregate  (cost=8.17..8.18 rows=1 width=32) (actual time=0.020..0.020 rows=1 loops=6)                                      |
+                ->  Index Scan using idx_emp_dept on employee  (cost=0.14..8.16 rows=1 width=14) (actual time=0.007..0.010 rows=4 loops=6)|
+                      Index Cond: (dept_id = d.dept_id)                                                                                   |
+Planning Time: 0.418 ms                                                                                                                   |
+Execution Time: 0.268 ms                                                                                                                  |
+-- 解读：
+-- 1. 通过 EXPLAIN ANALYZE 执行该语句并显示更多的信息。其他数据库也支持一些扩展的命令。
+-- 2. 首先，使用全表扫描（Seq Scan）获取 department 表中的数据，执行一次循环扫描返回 6 条记录；
+--    其次，执行子查询，通过索引扫描（Index Scan）获取 employee 表中的数据，同时进行聚合操作计算平均月薪，执行 6 次循环扫描平均获取 4 行数据。
+--    PostgreSQL 实际上采用的也是嵌套循环连接（Nested Loops Join），最后在内存中通过 dept_id 进行快速排序。
