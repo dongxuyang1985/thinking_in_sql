@@ -40,6 +40,33 @@ INSERT INTO t_users VALUES(5, '王五', '[]', '[]');
 
 -- 问题 1：张三和李四分别关注了刘一，王五关注了张三，如何用 SQL 实现？
 -- MySQL
+UPDATE t_users
+   SET followers = JSON_ARRAY_APPEND(followers,'$', 3)
+ WHERE id = 1;
+UPDATE t_users
+   SET followed_users = JSON_ARRAY_APPEND(followed_users,'$', 1)
+ WHERE id = 3;
+UPDATE t_users
+   SET followers = JSON_ARRAY_APPEND(followers,'$', 4)
+ WHERE id = 1;
+UPDATE t_users
+   SET followed_users = JSON_ARRAY_APPEND(followed_users,'$', 1)
+ WHERE id = 4;
+UPDATE t_users
+   SET followers = JSON_ARRAY_APPEND(followers,'$', 5)
+ WHERE id = 3;
+UPDATE t_users
+   SET followed_users = JSON_ARRAY_APPEND(followed_users,'$', 3)
+ WHERE id = 5;
+
+SELECT * FROM t_users;
+id|username|followed_users|followers|
+--|--------|--------------|---------|
+ 1|刘一      |[]            |[3, 4]   |
+ 2|陈二      |[]            |[]       |
+ 3|张三      |[1]           |[5]      |
+ 4|李四      |[1]           |[]       |
+ 5|王五      |[3]           |[]       |
 
 
 -- Oracle
@@ -50,6 +77,8 @@ INSERT INTO t_users VALUES(5, '王五', '[]', '[]');
 
 -- 问题 2：李四取消了对刘一的关注，如何用 SQL 实现？
 -- MySQL
+
+
 -- Oracle
 -- SQL Server
 -- PostgreSQL
