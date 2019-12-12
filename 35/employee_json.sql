@@ -1,5 +1,5 @@
 -- 创建 employee_json 表，使用 JSON 数据类型存储员工的信息
--- MySQL 和 PostgreSQL 实现
+-- MySQL 实现
 CREATE TABLE employee_json(
   emp_id    INTEGER NOT NULL PRIMARY KEY,
   emp_info  JSON NOT NULL
@@ -15,6 +15,12 @@ CREATE TABLE employee_json(
 CREATE TABLE employee_json(
   emp_id    INTEGER NOT NULL PRIMARY KEY,
   emp_info  VARCHAR(MAX) NOT NULL CHECK ( ISJSON(emp_info)>0 )
+);
+
+-- PostgreSQL 实现
+CREATE TABLE employee_json(
+  emp_id    INTEGER NOT NULL PRIMARY KEY,
+  emp_info  JSONB NOT NULL
 );
 
 -- 生成初始化数据
