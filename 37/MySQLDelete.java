@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.Properties;
 
 public class MySQLDelete {
-    public static <conn> void main(String[] args )
+    public static void main(String[] args )
     {
         String url = null;
         String user = null;
