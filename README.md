@@ -9,3 +9,6 @@ GitChat 专栏[《SQL 从入门到精通》](https://gitbook.cn/gitchat/column/5
  3. 运行 drop_table.sql 删除示例表，然后可以再次创建示例表并初始化数据。
 
 其他脚本按照课程章节进行组织，可以根据需要进行下载使用。
+
+
+<a href="https://gitbook.cn/gitchat/column/5dae96ec669f843a1a4aed95"><img src="https://images.gitbook.cn/Fm2AHWVkoT6WXuKVgFhwDfEJb--6?imageslim"/></a>
