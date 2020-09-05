@@ -33,6 +33,7 @@ CREATE TABLE attendance(
 -- 生成测试数据
 -- Oracle 需要执行以下 ALTER 语句
 -- ALTER SESSION SET nls_date_format = 'YYYY-MM-DD';
+-- ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF';
 
 INSERT INTO calendar VALUES (1,'2019-01-01',2019,1,1,'Y');
 INSERT INTO calendar VALUES (2,'2019-01-02',2019,1,2,'Y');
